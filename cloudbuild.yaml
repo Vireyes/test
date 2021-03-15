@@ -1,27 +1,7 @@
- # build the container image
-    - name: "gcr.io/cloud-builders/docker"
-      args:
-          ["build", "-t", "gcr.io/$PROJECT_ID/CF01:${SHORT_SHA}", "."]
-      # push the container image to Container Registry
-    - name: "gcr.io/cloud-builders/docker"
-      args: ["push", "gcr.io/$PROJECT_ID/CF01"]
-      # deploy container image to Cloud Run
-    - name: "gcr.io/cloud-builders/gcloud"
-      args:
-          [
-              "beta",
-              "run",
-              "deploy",
-              "CF01",
-              "--image",
-              "gcr.io/$PROJECT_ID/CF01:${SHORT_SHA}",
-              "--region",
-              "us-central1",
-              "--allow-unauthenticated",
-              "--platform",
-              "managed",
-          ]
-      env:
-          - "PORT=8080"
-images:
-    - gcr.io/$PROJECT_ID/CF01
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/CF01/cf01_img:$SHORT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/CF01/cf01_img:$SHORT_SHA']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'cf01_img', '--region=us-central1', '--platform=managed', '--image=gcr.io/CF01/cf01_img:$SHORT_SHA']
