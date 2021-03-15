@@ -1,6 +1,6 @@
 # Dockerfile create-react-app
 
-FROM node:10
+FROM node:12-slim
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -8,15 +8,9 @@ WORKDIR /usr/src/app
 ENV PORT 8080
 ENV HOST 0.0.0.0
 
-COPY package.json .
+COPY / ./
 RUN npm install
-COPY . ./
 
-# Install dependencies
-RUN npm install -g serve
-RUN npm install --only=production
 RUN npm run build
 
-
-# Start the service
-CMD serve -s build
+RUN npm start
